@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: valkon
+  name: valkon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: valkon
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: valkon
+    spec:
+      serviceAccount: valkon-sa
+      containers:
+      - image: anutosh491/Valid_Controller:0.1.8
+        name: Valid_Controller
+        args:
+        - --tls-cert-file=/var/run/webhook/serving-cert/tls.crt
+        - --tls-private-key-file=/var/run/webhook/serving-cert/tls.key
+        - --v=4
+        resources: {}
+        volumeMounts:
+          - name: serving-cert
+            mountPath: /var/run/webhook/serving-cert
+      volumes:
+        - name: serving-cert
+          secret:
+            secretName: certs
+status: {}
